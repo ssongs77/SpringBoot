@@ -7,12 +7,12 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class HelloController {
 
-	@RequestMapping("/{num}")
-	public String index(@PathVariable int num) {
-		int res = 0;
-		for (int i = 1; i <= num; i++) {
-			res += i;
-		}
-		return "total : " + res;
+	String[] names = { "kim", "lee", "park", "choi", "jo" };
+	String[] mails = { "kim@tuuyano.com", "lee@flower.com", "park@yama", "choi@happy", "jo@baba" };
+
+	@RequestMapping("/{id}")
+	public DataObject index(@PathVariable int id) {
+		
+		return new DataObject(id, names[id], mails[id]);
 	}
 }
