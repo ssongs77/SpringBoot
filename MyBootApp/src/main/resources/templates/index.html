@@ -19,6 +19,10 @@ body {
 </head>
 <body>
 	<h1>Hello pange</h1>
-	<p class="msg" th:text="${msg}"></p>
+	<p class="msg" th:text="${msg}">please wait....</p>
+	<form method="post" action="/"> <!-- //Post 방식 전송대상 : / -->
+		<input type="text" name="text1" th:value="${value}" />
+		<input type="submit" value="Click"/>
+	</form>
 </body>
 </html>
