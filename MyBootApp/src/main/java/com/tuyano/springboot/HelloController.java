@@ -3,21 +3,28 @@ package com.tuyano.springboot;
 import java.util.ArrayList;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 @Controller
 public class HelloController {
 
-	@RequestMapping("/")
-	public ModelAndView index(ModelAndView mav) {
+	@RequestMapping("/{num}")
+	public ModelAndView index(@PathVariable int num, ModelAndView mav) {
 		mav.setViewName("index");
-		
-		ArrayList<String[]> data = new ArrayList<String[]>();
-		data.add(new String[] {"park", "park@yama", "090-111-2222"});
-		data.add(new String[] {"kim", "kim@dddd", "010-123-1234"});
-		data.add(new String[] {"lee", "lee@yama", "090-312-4321"});
-		
+
+		mav.addObject("num", num);
+
+		if (num >= 0) {
+			mav.addObject("check", "num >= data.size() ? 0 : num");
+		} else {
+			mav.addObject("check", "num <= data.size() * -1 ? 0 : num * -1");
+		}
+		ArrayList<DataObject> data = new ArrayList<DataObject>();
+		data.add(new DataObject(0, "park", "park@yama"));
+		data.add(new DataObject(1, "kim", "kim@yama"));
+		data.add(new DataObject(2, "lee", "lee@yama"));
 		mav.addObject("data", data);
 		return mav;
 	}
