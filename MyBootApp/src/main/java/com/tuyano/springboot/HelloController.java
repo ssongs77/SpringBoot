@@ -10,16 +10,9 @@ public class HelloController {
 	@RequestMapping("/")
 	public ModelAndView index(ModelAndView mav) {
 		mav.setViewName("index");
+		mav.addObject("msg", "current data.");
+		DataObject obj = new DataObject(123, "lee", "lee@flower");
+		mav.addObject("object", obj);
 		return mav;
 	}
-	
-	@RequestMapping("/other")
-	public String other() {
-		return "redirect:/";
-	}
-	
-	@RequestMapping("/home")
-	public String home() {
-		return "forward:/";
-	}	
 }

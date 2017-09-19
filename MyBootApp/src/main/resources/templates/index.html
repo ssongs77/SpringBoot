@@ -16,17 +16,30 @@ body {
 	margin: 5px 25px;
 }
 
-pre {
-	font-size: 13pt;
-	color: gray;
-	padding: 5px 10px;
-	border: 1px solid gray;
+tr {
+	margin: 5px;
+}
+
+tr {
+	padding: 5px;
+	color: white;
+	background: darkgray;
+}
+
+td {
+	padding: 5px;
+	color: black;
+	background: #e0e0ff;
 }
 </style>
 </head>
 <body>
-	<h1>Hello pange</h1>
 	<h1 th:text="#{content.title}">Hello page</h1>
-	<p th:text="#{content.message}"></p>
+	<p th:text="${mag}">message.</p>
+	<table th:object="${object}">
+		<tr><th>ID</th><td th:text="*{id}"></td></tr>
+		<tr><th>NAME</th><td th:text="*{name}"></td></tr>
+		<tr><th>MAIL</th><td th:text="*{value}"></td></tr>
+	</table>
 </body>
 </html>
