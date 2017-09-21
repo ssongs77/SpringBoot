@@ -1,31 +1,39 @@
 package com.tuyano.springboot;
 
-import java.util.ArrayList;
-
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
+
+import com.tuyano.springboot.repositories.MyDataRrepository;
 
 @Controller
 public class HelloController {
-
-	@RequestMapping("/{num}")
-	public ModelAndView index(@PathVariable int num, ModelAndView mav) {
+	
+	@Autowired
+	MyDataRrepository repository;
+	
+	@RequestMapping(value = "/", method = RequestMethod.GET)
+	public ModelAndView index(
+			@ModelAttribute("formModel") MyData mydata, 
+			ModelAndView mav) {
 		mav.setViewName("index");
-
-		mav.addObject("num", num);
-
-		if (num >= 0) {
-			mav.addObject("check", "num >= data.size() ? 0 : num");
-		} else {
-			mav.addObject("check", "num <= data.size() * -1 ? 0 : num * -1");
-		}
-		ArrayList<DataObject> data = new ArrayList<DataObject>();
-		data.add(new DataObject(0, "park", "park@yama"));
-		data.add(new DataObject(1, "kim", "kim@yama"));
-		data.add(new DataObject(2, "lee", "lee@yama"));
-		mav.addObject("data", data);
+		mav.addObject("msg","this is sample content.");
+		Iterable<MyData> list = repository.findAll();
+		mav.addObject("datalist",list);
 		return mav;
 	}
+
+	@RequestMapping(value = "/", method = RequestMethod.POST)
+	@Transactional(readOnly=false)
+	public ModelAndView form(
+			@ModelAttribute("formModel") MyData mydata, 
+			ModelAndView mav) {
+		repository.saveAndFlush(mydata);
+		return new ModelAndView("redirect:/");
+	}
+
 }
