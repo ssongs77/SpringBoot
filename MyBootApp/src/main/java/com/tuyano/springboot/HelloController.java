@@ -1,6 +1,8 @@
 package com.tuyano.springboot;
 
 import javax.annotation.PostConstruct;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -22,12 +24,17 @@ public class HelloController {
 	@Autowired
 	MyDataRepository repository;
 
+	@PersistenceContext // EntityManager의 Bean을 가져와서 필드에 설정. boot의 경우 EntityManager 실행시에 자동으로 Bean 등록 됨
+	EntityManager entityManager; //①
+	
+	MyDataDaoImpl dao;//②
+	
 	@RequestMapping(value = "/", method = RequestMethod.GET)
 	public ModelAndView index(@ModelAttribute("formModel") MyData mydata, ModelAndView mav) {
 		mav.setViewName("index");
-		mav.addObject("msg", "this is sample content.");
+		mav.addObject("msg", "MyData 예제 입니다.");
 		mav.addObject("formModel", mydata);
-		Iterable<MyData> list = repository.findAll();
+		Iterable<MyData> list = dao.getAll(); //③
 		mav.addObject("datalist", list);
 		return mav;
 	}
@@ -52,6 +59,7 @@ public class HelloController {
 
 	@PostConstruct
 	public void init() {
+		dao = new MyDataDaoImpl(entityManager); //⑤
 		MyData d1 = new MyData();
 		d1.setName("tuyano");
 		d1.setAge(123);
