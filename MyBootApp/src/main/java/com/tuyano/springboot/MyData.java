@@ -14,36 +14,37 @@ import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotEmpty;
 
 @Entity
-@Table(name = "mydata") // 생략하면 클래스명이 table 명이 됨
+@Table(name = "mydata")
 public class MyData {
 
-	@Id // 메인 키 지정. 엔터티 클래스를 정의할때 반드시 설정
+	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column
-	@NotNull
+	@NotNull	
 	private long id;
 
 	@Column(length = 50, nullable = false)
-	@NotEmpty(message = "공백 불가")
+	@NotEmpty
 	private String name;
 
 	@Column(length = 200, nullable = true)
-	@Email(message = "메일 주소만")
+	@Email
 	private String mail;
 
 	@Column(nullable = true)
-	@Min(value = 0, message = "0이상")
-	@Max(value = 200, message = "200이하")
+	@Min(value=0)	
+	@Max(value=200) 
 	private Integer age;
+
 
 	@Column(nullable = true)
 	@Phone(onlyNumber=true)
 	private String memo;
 
+
 	public long getId() {
 		return id;
 	}
-
 	public void setId(long id) {
 		this.id = id;
 	}
@@ -51,7 +52,6 @@ public class MyData {
 	public String getName() {
 		return name;
 	}
-
 	public void setName(String name) {
 		this.name = name;
 	}
@@ -59,7 +59,6 @@ public class MyData {
 	public String getMail() {
 		return mail;
 	}
-
 	public void setMail(String mail) {
 		this.mail = mail;
 	}
@@ -67,7 +66,6 @@ public class MyData {
 	public Integer getAge() {
 		return age;
 	}
-
 	public void setAge(Integer age) {
 		this.age = age;
 	}
@@ -75,9 +73,7 @@ public class MyData {
 	public String getMemo() {
 		return memo;
 	}
-
-	public void setMemo(String meno) {
-		this.memo = meno;
+	public void setMemo(String memo) {
+		this.memo = memo;
 	}
-
 }
