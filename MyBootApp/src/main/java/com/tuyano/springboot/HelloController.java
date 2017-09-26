@@ -1,8 +1,12 @@
 package com.tuyano.springboot;
 
+import java.util.List;
+
 import javax.annotation.PostConstruct;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -25,16 +29,16 @@ public class HelloController {
 	MyDataRepository repository;
 
 	@PersistenceContext // EntityManager의 Bean을 가져와서 필드에 설정. boot의 경우 EntityManager 실행시에 자동으로 Bean 등록 됨
-	EntityManager entityManager; //①
-	
-	MyDataDaoImpl dao;//②
-	
+	EntityManager entityManager; // ①
+
+	MyDataDaoImpl dao;// ②
+
 	@RequestMapping(value = "/", method = RequestMethod.GET)
 	public ModelAndView index(@ModelAttribute("formModel") MyData mydata, ModelAndView mav) {
 		mav.setViewName("index");
 		mav.addObject("msg", "MyData 예제 입니다.");
 		mav.addObject("formModel", mydata);
-		Iterable<MyData> list = dao.getAll(); //③
+		Iterable<MyData> list = dao.getAll(); // ③
 		mav.addObject("datalist", list);
 		return mav;
 	}
@@ -59,7 +63,7 @@ public class HelloController {
 
 	@PostConstruct
 	public void init() {
-		dao = new MyDataDaoImpl(entityManager); //⑤
+		dao = new MyDataDaoImpl(entityManager); // ⑤
 		MyData d1 = new MyData();
 		d1.setName("tuyano");
 		d1.setAge(123);
@@ -110,6 +114,34 @@ public class HelloController {
 	public ModelAndView remove(@RequestParam long id, ModelAndView mav) {
 		repository.delete(id);
 		return new ModelAndView("redirect:/");
+	}
+
+	@RequestMapping(value = "/find", method = RequestMethod.GET)
+	public ModelAndView find(ModelAndView mav) {
+		mav.setViewName("find");
+		mav.addObject("title", "Find page");
+		mav.addObject("msg", "MyData의 예제입니다.");
+		mav.addObject("value", "");
+		Iterable<MyData> list = dao.getAll();
+		mav.addObject("datalist", list);
+		return mav;
+	}
+
+	@RequestMapping(value = "/find", method = RequestMethod.POST)
+	public ModelAndView search(HttpServletRequest request, ModelAndView mav) {
+		mav.setViewName("find");
+		String param = request.getParameter("fstr");
+		System.out.println("param : "+param);
+		if (param == "") {
+			mav = new ModelAndView("redirect:/find");
+		} else {
+			mav.addObject("title", "find result");
+			mav.addObject("msg", "["+param+"]의 검색결과");
+			mav.addObject("value", param);
+			List<MyData> list = dao.find(param);
+			mav.addObject("datalist", list);
+		}
+		return mav;
 	}
 
 }
