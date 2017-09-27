@@ -28,9 +28,8 @@ public class MyDataDaoImpl implements MyDataDao<MyData> {
 		CriteriaBuilder builder = entityManager.getCriteriaBuilder();
 		CriteriaQuery<MyData> query = builder.createQuery(MyData.class);
 		Root<MyData> root = query.from(MyData.class);
-		query.select(root);
-		list = (List<MyData>)entityManager.createQuery(query).getResultList();
-		
+		query.select(root).orderBy(builder.asc(root.get("name")));
+		list = (List<MyData>) entityManager.createQuery(query).getResultList();
 		return list;
 	}
 
@@ -50,18 +49,19 @@ public class MyDataDaoImpl implements MyDataDao<MyData> {
 		CriteriaQuery<MyData> query = builder.createQuery(MyData.class);
 		Root<MyData> root = query.from(MyData.class);
 		query.select(root).where(builder.equal(root.get("name"), fstr));
-		
+
 		List<MyData> list = null;
-		
+
 		list = (List<MyData>) entityManager.createQuery(query).getResultList();
-		
+
 		return list;
 	}
 
 	@Override
 	public List<MyData> findByAge(int min, int max) {
 		// TODO Auto-generated method stub
-		return (List<MyData>)entityManager.createNamedQuery("findByAge").setParameter("min", min).setParameter("max", max).getResultList();
-		
+		return (List<MyData>) entityManager.createNamedQuery("findByAge").setParameter("min", min)
+				.setParameter("max", max).getResultList();
+
 	}
 }
