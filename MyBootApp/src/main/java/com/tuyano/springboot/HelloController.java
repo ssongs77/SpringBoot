@@ -34,11 +34,11 @@ public class HelloController {
 	MyDataDaoImpl dao;// ②
 
 	@RequestMapping(value = "/", method = RequestMethod.GET)
-	public ModelAndView index(@ModelAttribute("formModel") MyData mydata, ModelAndView mav) {
+	public ModelAndView index(ModelAndView mav) {
 		mav.setViewName("index");
-		mav.addObject("msg", "MyData 예제 입니다.");
-		mav.addObject("formModel", mydata);
-		Iterable<MyData> list = dao.getAll(); // ③
+		mav.addObject("title", "Find Page");
+		mav.addObject("msg", "MyData의 예제 입니다.");
+		Iterable<MyData> list = repository.findAllOrderByName(); //dao.getAll();
 		mav.addObject("datalist", list);
 		return mav;
 	}
