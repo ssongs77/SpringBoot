@@ -38,7 +38,7 @@ public class HelloController {
 		mav.setViewName("index");
 		mav.addObject("title", "Find Page");
 		mav.addObject("msg", "MyData의 예제 입니다.");
-		Iterable<MyData> list = repository.findAllOrderByName(); //dao.getAll();
+		Iterable<MyData> list = dao.findByAge(10, 40);// repository.findAllOrderByName(); //dao.getAll();
 		mav.addObject("datalist", list);
 		return mav;
 	}

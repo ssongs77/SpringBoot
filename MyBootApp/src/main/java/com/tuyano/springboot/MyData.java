@@ -17,8 +17,8 @@ import org.hibernate.validator.constraints.NotEmpty;
 
 @Entity
 @Table(name = "mydata")
-@NamedQueries(@NamedQuery(name = "findWithName", query = "from MyData where name like :fname"))
-
+@NamedQueries({ @NamedQuery(name = "findWithName", query = "from MyData where name like :fname"),
+		@NamedQuery(name = "findByAge", query = "from MyData where age > :min and age < :max") })
 public class MyData {
 
 	@Id
