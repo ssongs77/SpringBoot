@@ -5,7 +5,6 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,13 +32,49 @@ public class HelloController {
 
 	MyDataDaoImpl dao;// ②
 
+	@Autowired
+	private MyDataService service;
+
 	@RequestMapping(value = "/", method = RequestMethod.GET)
 	public ModelAndView index(ModelAndView mav) {
 		mav.setViewName("index");
 		mav.addObject("title", "Find Page");
 		mav.addObject("msg", "MyData의 예제 입니다.");
-		Iterable<MyData> list = dao.getAll();//repository.findByAge(10, 40);//dao.findByAge(10, 40);// repository.findAllOrderByName(); //dao.getAll();
+		// Iterable<MyData> list = dao.getAll();//repository.findByAge(10,
+		// 40);//dao.findByAge(10, 40);// repository.findAllOrderByName();
+		// //dao.getAll();
+		Iterable<MyData> list = service.getAll();
 		mav.addObject("datalist", list);
+		return mav;
+	}
+
+	@RequestMapping(value = "/find", method = RequestMethod.GET)
+	public ModelAndView find(ModelAndView mav) {
+		mav.setViewName("find");
+		mav.addObject("title", "Find page");
+		mav.addObject("msg", "MyData의 예제입니다.");
+		mav.addObject("value", "");
+		// Iterable<MyData> list = dao.getAll();
+		Iterable<MyData> list = service.getAll();
+		mav.addObject("datalist", list);
+		return mav;
+	}
+
+	@RequestMapping(value = "/find", method = RequestMethod.POST)
+	public ModelAndView search(HttpServletRequest request, ModelAndView mav) {
+		mav.setViewName("find");
+		String param = request.getParameter("fstr");
+		System.out.println("param : " + param);
+		if (param == "") {
+			mav = new ModelAndView("redirect:/find");
+		} else {
+			mav.addObject("title", "find result");
+			mav.addObject("msg", "[" + param + "]의 검색결과");
+			mav.addObject("value", param);
+			//List<MyData> list = dao.find(param);
+			List<MyData> list = service.find(param);
+			mav.addObject("datalist", list);
+		}
 		return mav;
 	}
 
@@ -115,33 +150,4 @@ public class HelloController {
 		repository.delete(id);
 		return new ModelAndView("redirect:/");
 	}
-
-	@RequestMapping(value = "/find", method = RequestMethod.GET)
-	public ModelAndView find(ModelAndView mav) {
-		mav.setViewName("find");
-		mav.addObject("title", "Find page");
-		mav.addObject("msg", "MyData의 예제입니다.");
-		mav.addObject("value", "");
-		Iterable<MyData> list = dao.getAll();
-		mav.addObject("datalist", list);
-		return mav;
-	}
-
-	@RequestMapping(value = "/find", method = RequestMethod.POST)
-	public ModelAndView search(HttpServletRequest request, ModelAndView mav) {
-		mav.setViewName("find");
-		String param = request.getParameter("fstr");
-		System.out.println("param : "+param);
-		if (param == "") {
-			mav = new ModelAndView("redirect:/find");
-		} else {
-			mav.addObject("title", "find result");
-			mav.addObject("msg", "["+param+"]의 검색결과");
-			mav.addObject("value", param);
-			List<MyData> list = dao.find(param);
-			mav.addObject("datalist", list);
-		}
-		return mav;
-	}
-
 }
