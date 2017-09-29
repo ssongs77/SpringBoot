@@ -21,7 +21,7 @@ public class MyDataService {
 	}
 
 	public MyData get(int num) {
-		return (MyData) entityManager.createQuery("from MyData where id = " + num).getResultList();
+		return (MyData) entityManager.createQuery("from MyData where id = " + num).getSingleResult();
 	}
 
 	public List<MyData> find(String fstr) {
@@ -30,7 +30,7 @@ public class MyDataService {
 		Root<MyData> root = query.from(MyData.class);
 		query.select(root).where(builder.equal(root.get("name"), fstr));
 		List<MyData> list = null;
-		list = (List<MyData>)entityManager.createQuery(query).getResultList();
+		list = (List<MyData>) entityManager.createQuery(query).getResultList();
 		return list;
 	}
 }
