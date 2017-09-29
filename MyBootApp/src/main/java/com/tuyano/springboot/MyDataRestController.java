@@ -11,6 +11,9 @@ import org.springframework.web.bind.annotation.RestController;
 public class MyDataRestController {
 
 	@Autowired
+	MySampleBean bean;
+	
+	@Autowired
 	private MyDataService service;
 
 	@RequestMapping("/rest")
@@ -21,5 +24,10 @@ public class MyDataRestController {
 	@RequestMapping("/rest/{num}")
 	public MyData restBy(@PathVariable int num) {
 		return service.get(num);
+	}
+	
+	@RequestMapping("/count")
+	public int count() {
+		return bean.count();
 	}
 }
